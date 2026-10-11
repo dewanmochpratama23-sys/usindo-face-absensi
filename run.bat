@@ -24,7 +24,6 @@ start "" http://localhost:5000
 
 echo.
 echo [3/3] Menjalankan Server Backend USINDO di Port 5000...
-echo.
 echo ===============================================================================
 echo  PANDUAN LOGIN:
 echo  - Mahasiswa : Masukkan NIM (contoh: 240131009, 240131012, dll)
@@ -33,10 +32,19 @@ echo  - Admin     : admin (Biro BAAK USINDO)
 echo  - Kata Sandi Semua Akun: usindomaju01
 echo ===============================================================================
 echo.
-echo JENDELA INI ADALAH SERVER USINDO YANG SEDANG AKTIF.
-echo JANGAN TUTUP JENDELA INI SELAMA APLIKASI DIGUNAKAN!
-echo.
 
+curl.exe -s --connect-timeout 1 http://127.0.0.1:5000/api/health >nul 2>nul
+if %errorlevel% equ 0 (
+    echo [OK] Server backend USINDO SUDAH AKTIF di port 5000!
+    echo Aplikasi siap digunakan di browser kamu: http://localhost:5000
+    echo.
+    echo Jendela ini jangan ditutup selama menggunakan aplikasi.
+    pause
+    exit /b
+)
+
+echo Menyalakan server... Jendela ini jangan ditutup selama aplikasi digunakan.
+echo.
 cd /d "%~dp0server"
 node server.js
 pause
