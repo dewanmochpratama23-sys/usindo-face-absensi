@@ -1,0 +1,31 @@
+{
+  "name": "usindo-face-recognition-absensi",
+  "version": "1.0.0",
+  "description": "Sistem Absensi Mahasiswa Face Recognition USINDO berbasis AI Biometrik",
+  "main": "server/server.js",
+  "type": "module",
+  "scripts": {
+    "start": "node server/server.js",
+    "build": "cd client && npm install && npm run build",
+    "dev": "node server/server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "xlsx": "^0.18.5"
+  },
+  "keywords": [
+    "face-recognition",
+    "absensi-mahasiswa",
+    "liveness-detection",
+    "geofencing",
+    "usindo",
+    "biometric",
+    "ai"
+  ],
+  "author": "Tim Pengembang Sistem USINDO",
+  "license": "MIT"
+}
