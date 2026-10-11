@@ -60,18 +60,19 @@ Sistem ini terbagi menjadi 3 pilar tahapan utama:
 
 ---
 
-## 🔑 Akun Demo Pengujian
+## 🔑 Akun Uji Coba (Login Credentials)
 
-Anda dapat langsung berganti akun melalui tombol **"Ganti Akun"** di pojok kanan atas aplikasi web:
+Semua akun terdaftar menggunakan kata sandi default: **`usindomaju01`**
 
-| Role | Nama Pengguna | NIM / NIP | Kata Sandi | Status Awal |
+| Role | Nama Pengguna | NIM / NIP | Kata Sandi | Keterangan |
 |---|---|---|---|---|
-| **Mahasiswa** | Budi Pratama | `2024001` | `mahasiswa123` | Sudah Terdaftar (Enrollment Aktif, Kehadiran 100%) |
-| **Mahasiswa** | Siti Rahmawati | `2024002` | `mahasiswa123` | Sudah Terdaftar (Kehadiran 85.7%) |
-| **Mahasiswa** | Ahmad Fauzi | `2024003` | `mahasiswa123` | **Belum Terdaftar** (Uji Coba Alur Pendaftaran Wajah) |
-| **Mahasiswa** | Dewi Lestari | `2024004` | `mahasiswa123` | Kehadiran 57.1% (**Peringatan Tidak Lolos Ujian**) |
-| **Dosen** | Dr. Hendra Gunawan | `19850101` | `dosen123` | Dosen Pengampu Kecerdasan Buatan & Web |
-| **Admin** | Biro BAAK USINDO | `admin` | `admin123` | Administrator Akademik & Keamanan Kampus |
+| **Mahasiswa** | Dewan Moch Pratama | `240131009` | `usindomaju01` | Mahasiswa TI Semester 5 |
+| **Mahasiswa** | Fakhri Fadhlurrahman | `240131012` | `usindomaju01` | Biometrik Wajah Terdaftar (Enrolled) |
+| **Mahasiswa** | Muhammad Falah | `240131019` | `usindomaju01` | Mahasiswa TI Semester 5 |
+| **Mahasiswa** | Rival Setiawan | `240131025` | `usindomaju01` | Mahasiswa TI Semester 5 |
+| **Mahasiswa** | Hasan Hariri | `230131001` | `usindomaju01` | Mahasiswa TI Semester 5 |
+| **Dosen** | Bapak ANDRIYANA S.T., M.Kom. | `19850101` | `usindomaju01` | Dosen Pengampu Mata Kuliah |
+| **Admin** | Biro BAAK USINDO | `admin` | `usindomaju01` | Admin Master Mahasiswa & Akademik |
 
 ---
 
@@ -83,17 +84,22 @@ Anda dapat langsung berganti akun melalui tombol **"Ganti Akun"** di pojok kanan
 
 ---
 
-## 💻 Cara Menjalankan Sistem
+## 🚀 Cara Menjalankan Aplikasi
 
-Aplikasi ini telah aktif berjalan di port lokal:
-- **URL Aplikasi Web**: `http://localhost:5000`
+Aplikasi ini dilengkapi file peluncur praktis sekali klik:
 
-Jika ingin menjalankan ulang di kemudian hari:
-```bash
-# 1. Pindah ke direktori proyek
-cd C:\Users\LENOVO\.gemini\antigravity\scratch\usindo-face-absensi
+### 1. Untuk Akses di Laptop Sendiri
+Cukup klik dua kali file **`run.bat`** (atau `start-aplikasi.bat`):
+- Otomatis menyalakan server backend di latar belakang.
+- Otomatis membuka portal aplikasi di browser ke `http://localhost:5000`.
 
-# 2. Jalankan server (Frontend otomatis terintegrasi)
-node server/server.js
-```
-Buka browser Anda dan akses: **http://localhost:5000**
+### 2. Untuk Dibagikan ke Teman / Dibuka Lewat HP
+Cukup klik dua kali file **`bagikan-ke-teman.bat`**:
+- Menghubungkan ke Cloudflare Tunnel secara aman (HTTPS).
+- Menghasilkan tautan publik (contoh: `https://xxxx.trycloudflare.com`).
+- Tautan otomatis disalin ke clipboard dan siap dikirim via WhatsApp ke teman-teman!
+- Teman-teman dapat langsung membuka kamera HP dan melakukan absensi dari mana saja.
+
+### 3. Untuk Membuka Flowchart Interaktif & Panduan Presentasi
+Cukup klik dua kali file **`buka-flowchart.bat`**:
+- Membuka diagram alur visual 3 tahapan dan skrip presentasi di browser.
