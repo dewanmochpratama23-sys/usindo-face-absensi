@@ -9,8 +9,8 @@ echo ===================================================================
 echo.
 
 cd /d "%~dp0"
-start flowchart_usindo.html
+start "" "%~dp0flowchart_usindo.html"
 
 echo Berhasil dibuka di browser!
-timeout /t 2 /nobreak >nul
+ping 127.0.0.1 -n 3 >nul
 exit

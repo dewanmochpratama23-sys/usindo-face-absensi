@@ -113,6 +113,12 @@ async function main() {
           console.log('  [OK] Link sudah OTOMATIS DISALIN! Tinggal Paste (Ctrl+V) di WhatsApp.');
         } catch (e) {}
 
+        // Buka otomatis di browser
+        try {
+          spawn('cmd', ['/c', 'start', '', url]);
+          console.log('  [OK] Membuka link resmi di browser kamu...');
+        } catch (e) {}
+
         console.log('*******************************************************************\n');
         console.log('PENTING: Jendela ini MEMANG HARUS TETAP TERBUKA untuk menjaga link');
         console.log('tetap aktif. Jangan ditutup selama teman-teman masih menggunakan aplikasi.\n');
