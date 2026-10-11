@@ -70,6 +70,13 @@ export const api = {
     return data;
   },
 
+  async registerStudent(studentData) {
+    return await this.request('/auth/register-student', {
+      method: 'POST',
+      body: JSON.stringify(studentData)
+    });
+  },
+
   logout() {
     this.setToken(null);
     this.setUser(null);
@@ -139,6 +146,19 @@ export const api = {
   async getStudents() {
     const data = await this.request('/students');
     return data.students || [];
+  },
+
+  async createStudent(studentData) {
+    return await this.request('/students', {
+      method: 'POST',
+      body: JSON.stringify(studentData)
+    });
+  },
+
+  async deleteStudent(identifier) {
+    return await this.request(`/students/${identifier}`, {
+      method: 'DELETE'
+    });
   },
 
   async deleteAttendance(attendanceId) {

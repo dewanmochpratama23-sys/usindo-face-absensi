@@ -218,6 +218,77 @@ app.get('/api/auth/me', authenticateToken, (req, res) => {
   });
 });
 
+// Registrasi Mandiri Mahasiswa Baru
+app.post('/api/auth/register-student', (req, res) => {
+  const { name, identifier, email, prodi, kelas, semester, password } = req.body;
+  const ip = getClientIp(req);
+  const userAgent = req.headers['user-agent'] || 'Browser';
+
+  if (!name || !identifier) {
+    return res.status(400).json({ success: false, message: 'Nama lengkap dan NIM wajib diisi' });
+  }
+
+  const cleanNim = identifier.trim();
+  const cleanName = name.trim();
+
+  // Validasi format NIM minimal 4 karakter
+  if (cleanNim.length < 4) {
+    return res.status(400).json({ success: false, message: 'NIM harus memiliki minimal 4 karakter' });
+  }
+
+  // Cek apakah NIM sudah terdaftar
+  const existing = db.find('users', u => u.identifier.toLowerCase() === cleanNim.toLowerCase());
+  if (existing) {
+    return res.status(400).json({ 
+      success: false, 
+      message: `Mahasiswa dengan NIM ${cleanNim} (${existing.name}) sudah terdaftar! Silakan langsung login.` 
+    });
+  }
+
+  const defaultPassword = password || 'usindomaju01';
+  const newStudent = {
+    id: `USR-${Date.now()}`,
+    identifier: cleanNim,
+    name: cleanName,
+    email: email || `${cleanNim}@mhs.usindo.ac.id`,
+    role: 'mahasiswa',
+    prodi: prodi || 'Teknik Informatika',
+    semester: Number(semester) || 5,
+    kelas: kelas || 'TI-4A',
+    passwordHash: bcrypt.hashSync(defaultPassword, 10),
+    faceEnrolled: false,
+    enrolledAt: null,
+    faceEmbeddings: null
+  };
+
+  db.insert('users', newStudent);
+
+  db.logAudit({
+    action: 'STUDENT_SELF_REGISTERED',
+    identifier: cleanNim,
+    name: cleanName,
+    role: 'mahasiswa',
+    status: 'SUCCESS',
+    ip,
+    userAgent,
+    details: `Mahasiswa baru mendaftar akun: ${cleanName} (NIM: ${cleanNim}) Kelas: ${newStudent.kelas}`
+  });
+
+  res.json({
+    success: true,
+    message: `Pendaftaran berhasil! Akun NIM ${cleanNim} (${cleanName}) telah aktif. Silakan login untuk melakukan pemindaian wajah.`,
+    student: {
+      id: newStudent.id,
+      identifier: newStudent.identifier,
+      name: newStudent.name,
+      prodi: newStudent.prodi,
+      semester: newStudent.semester,
+      kelas: newStudent.kelas,
+      faceEnrolled: false
+    }
+  });
+});
+
 // ==========================================
 // 2. PENDAFTARAN WAJAH (ENROLLMENT)
 // Sesuai Diagram: Depan, Kiri, Kanan
@@ -833,6 +904,105 @@ app.get('/api/students', authenticateToken, (req, res) => {
     enrolledAt: u.enrolledAt
   }));
   res.json({ success: true, students });
+});
+
+// Tambah Mahasiswa Baru oleh BAAK / Dosen
+app.post('/api/students', authenticateToken, authorizeRole('admin', 'dosen'), (req, res) => {
+  const { name, identifier, email, prodi, kelas, semester, password } = req.body;
+  const ip = getClientIp(req);
+  const userAgent = req.headers['user-agent'] || 'Browser';
+
+  if (!name || !identifier) {
+    return res.status(400).json({ success: false, message: 'Nama lengkap dan NIM wajib diisi' });
+  }
+
+  const cleanNim = identifier.trim();
+  const cleanName = name.trim();
+
+  // Validasi format NIM minimal 4 karakter
+  if (cleanNim.length < 4) {
+    return res.status(400).json({ success: false, message: 'NIM harus memiliki minimal 4 karakter' });
+  }
+
+  // Cek apakah NIM sudah terdaftar
+  const existing = db.find('users', u => u.identifier.toLowerCase() === cleanNim.toLowerCase());
+  if (existing) {
+    return res.status(400).json({ 
+      success: false, 
+      message: `Mahasiswa dengan NIM ${cleanNim} (${existing.name}) sudah terdaftar di sistem!` 
+    });
+  }
+
+  const defaultPassword = password || 'usindomaju01';
+  const newStudent = {
+    id: `USR-${Date.now()}`,
+    identifier: cleanNim,
+    name: cleanName,
+    email: email || `${cleanNim}@mhs.usindo.ac.id`,
+    role: 'mahasiswa',
+    prodi: prodi || 'Teknik Informatika',
+    semester: Number(semester) || 5,
+    kelas: kelas || 'TI-4A',
+    passwordHash: bcrypt.hashSync(defaultPassword, 10),
+    faceEnrolled: false,
+    enrolledAt: null,
+    faceEmbeddings: null
+  };
+
+  db.insert('users', newStudent);
+
+  db.logAudit({
+    action: 'STUDENT_REGISTERED_BY_BAAK',
+    identifier: req.user.identifier,
+    name: req.user.name,
+    role: req.user.role,
+    status: 'SUCCESS',
+    ip,
+    userAgent,
+    details: `BAAK mendaftarkan mahasiswa baru: ${cleanName} (NIM: ${cleanNim}) Kelas: ${newStudent.kelas}`
+  });
+
+  res.json({
+    success: true,
+    message: `Mahasiswa ${cleanName} (${cleanNim}) berhasil didaftarkan oleh BAAK! Mahasiswa kini dapat login menggunakan kata sandi '${defaultPassword}' dan langsung mendaftarkan wajahnya.`,
+    student: {
+      id: newStudent.id,
+      identifier: newStudent.identifier,
+      name: newStudent.name,
+      email: newStudent.email,
+      prodi: newStudent.prodi,
+      semester: newStudent.semester,
+      kelas: newStudent.kelas,
+      faceEnrolled: false
+    }
+  });
+});
+
+// Hapus Mahasiswa oleh BAAK / Dosen
+app.delete('/api/students/:identifier', authenticateToken, authorizeRole('admin', 'dosen'), (req, res) => {
+  const { identifier } = req.params;
+  const user = db.find('users', u => u.identifier === identifier && u.role === 'mahasiswa');
+  if (!user) {
+    return res.status(404).json({ success: false, message: 'Mahasiswa tidak ditemukan' });
+  }
+
+  db.delete('users', u => u.identifier === identifier);
+  // Hapus riwayat presensi terkait
+  db.delete('attendances', a => a.identifier === identifier);
+
+  db.logAudit({
+    action: 'STUDENT_DELETED_BY_BAAK',
+    identifier: req.user.identifier,
+    name: req.user.name,
+    role: req.user.role,
+    status: 'SUCCESS',
+    details: `BAAK menghapus data mahasiswa: ${user.name} (NIM: ${identifier})`
+  });
+
+  res.json({
+    success: true,
+    message: `Data mahasiswa ${user.name} (${identifier}) berhasil dihapus dari sistem.`
+  });
 });
 
 // Serve Built Client Static Assets

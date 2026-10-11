@@ -46,21 +46,38 @@ export default function LecturerMonitoring({ currentUser }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
 
+  // Master Mahasiswa BAAK State
+  const [studentsList, setStudentsList] = useState([]);
+  const [showAddStudentModal, setShowAddStudentModal] = useState(false);
+  const [newStudentData, setNewStudentData] = useState({
+    name: '',
+    identifier: '',
+    prodi: 'Teknik Informatika',
+    semester: 5,
+    kelas: 'TI-4A',
+    password: 'usindomaju01'
+  });
+  const [addStudentError, setAddStudentError] = useState(null);
+  const [addStudentSuccess, setAddStudentSuccess] = useState(null);
+  const [isSubmittingStudent, setIsSubmittingStudent] = useState(false);
+
   // Fetch Report Data safely using Promise.allSettled
   const loadReports = async () => {
     try {
       setIsLoading(true);
-      const [recapRes, logsRes, schRes, attRes] = await Promise.allSettled([
+      const [recapRes, logsRes, schRes, attRes, stuRes] = await Promise.allSettled([
         api.getRecapReport(selectedCourseId),
         api.getAuditLogs(),
         api.getSchedules(),
-        api.getAttendances({ courseId: selectedCourseId })
+        api.getAttendances({ courseId: selectedCourseId }),
+        api.getStudents()
       ]);
 
       const recap = recapRes.status === 'fulfilled' ? recapRes.value : null;
       const logs = logsRes.status === 'fulfilled' ? logsRes.value : [];
       const schList = schRes.status === 'fulfilled' ? schRes.value : [];
       const attList = attRes.status === 'fulfilled' ? attRes.value : [];
+      const stuList = stuRes.status === 'fulfilled' ? stuRes.value : [];
 
       if (recap && recap.course) {
         setRecapData(recap);
@@ -74,10 +91,49 @@ export default function LecturerMonitoring({ currentUser }) {
       setAuditLogs(logs);
       setSchedules(schList);
       setAttendanceRecords(attList);
+      setStudentsList(stuList);
     } catch (err) {
       console.error('Error loading monitoring data:', err);
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const handleAddStudent = async (e) => {
+    e.preventDefault();
+    setAddStudentError(null);
+    setAddStudentSuccess(null);
+    setIsSubmittingStudent(true);
+    try {
+      const res = await api.createStudent(newStudentData);
+      setAddStudentSuccess(res.message || 'Mahasiswa berhasil didaftarkan oleh BAAK!');
+      setNewStudentData({
+        name: '',
+        identifier: '',
+        prodi: 'Teknik Informatika',
+        semester: 5,
+        kelas: 'TI-4A',
+        password: 'usindomaju01'
+      });
+      await loadReports();
+      setTimeout(() => {
+        setShowAddStudentModal(false);
+        setAddStudentSuccess(null);
+      }, 1800);
+    } catch (err) {
+      setAddStudentError(err.message || 'Gagal mendaftarkan mahasiswa');
+    } finally {
+      setIsSubmittingStudent(false);
+    }
+  };
+
+  const handleDeleteStudent = async (identifier, name) => {
+    if (!window.confirm(`Hapus data mahasiswa ${name} (${identifier}) dari sistem BAAK?`)) return;
+    try {
+      await api.deleteStudent(identifier);
+      await loadReports();
+    } catch (err) {
+      alert('Gagal menghapus mahasiswa: ' + err.message);
     }
   };
 
@@ -376,6 +432,17 @@ export default function LecturerMonitoring({ currentUser }) {
             >
               Kontrol Jadwal
             </button>
+            <button
+              onClick={() => setActiveSubTab('mahasiswa')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all flex items-center space-x-1.5 ${
+                activeSubTab === 'mahasiswa'
+                  ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/30 font-semibold'
+                  : 'text-slate-400 hover:text-white'
+              }`}
+            >
+              <Users className="w-3.5 h-3.5 text-indigo-400" />
+              <span>Master Mahasiswa (BAAK)</span>
+            </button>
           </div>
         </div>
 
@@ -400,8 +467,21 @@ export default function LecturerMonitoring({ currentUser }) {
             </select>
           </div>
 
-          {/* Action Buttons: Export PDF and Excel */}
+          {/* Action Buttons: Export PDF, Excel, and Add Student */}
           <div className="flex items-center space-x-2">
+            <button
+              onClick={() => {
+                setAddStudentError(null);
+                setAddStudentSuccess(null);
+                setShowAddStudentModal(true);
+              }}
+              className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-indigo-600/30 hover:bg-indigo-600/50 text-indigo-200 border border-indigo-500/40 transition-all flex items-center space-x-1.5 shadow-sm"
+              title="Daftarkan Mahasiswa Baru Resmi ke Database BAAK"
+            >
+              <Users className="w-3.5 h-3.5 text-indigo-400" />
+              <span>+ Mahasiswa Baru (BAAK)</span>
+            </button>
+
             <button
               onClick={handleExportPDF}
               className="px-3.5 py-2 rounded-xl text-xs font-semibold bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/40 transition-all flex items-center space-x-1.5 shadow-sm"
@@ -995,6 +1075,232 @@ export default function LecturerMonitoring({ currentUser }) {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      )}
+
+      {/* SUB-TAB 5: MASTER DATA MAHASISWA (BIRO BAAK) */}
+      {activeSubTab === 'mahasiswa' && (
+        <div className="glass-panel rounded-2xl p-6 border border-slate-800">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+            <div>
+              <div className="flex items-center space-x-2">
+                <Users className="w-5 h-5 text-indigo-400" />
+                <h3 className="font-extrabold text-white text-base">
+                  Master Data Mahasiswa (Biro Administrasi Akademik - BAAK)
+                </h3>
+              </div>
+              <p className="text-xs text-slate-400 mt-0.5">
+                Kelola data akun mahasiswa resmi, status pendaftaran wajah biometrik (3 sudut), dan pendaftaran mahasiswa baru.
+              </p>
+            </div>
+
+            <button
+              onClick={() => {
+                setAddStudentError(null);
+                setAddStudentSuccess(null);
+                setShowAddStudentModal(true);
+              }}
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center space-x-2 shrink-0"
+            >
+              <Users className="w-4 h-4" />
+              <span>+ Tambah Mahasiswa Baru (BAAK)</span>
+            </button>
+          </div>
+
+          {/* Students Table */}
+          <div className="overflow-x-auto rounded-xl border border-slate-800">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-900/90 text-slate-400 uppercase tracking-wider font-semibold border-b border-slate-800">
+                <tr>
+                  <th className="px-4 py-3">No</th>
+                  <th className="px-4 py-3">NIM</th>
+                  <th className="px-4 py-3">Nama Mahasiswa</th>
+                  <th className="px-4 py-3">Program Studi & Kelas</th>
+                  <th className="px-4 py-3">Status Biometrik Wajah</th>
+                  <th className="px-4 py-3">Waktu Pendaftaran</th>
+                  <th className="px-4 py-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800 text-slate-300">
+                {studentsList.length > 0 ? (
+                  studentsList.map((stu, idx) => (
+                    <tr key={stu.id || stu.identifier} className="hover:bg-slate-800/40 transition-colors">
+                      <td className="px-4 py-3 font-mono text-slate-500">{idx + 1}</td>
+                      <td className="px-4 py-3 font-mono font-bold text-cyan-300">{stu.identifier}</td>
+                      <td className="px-4 py-3 font-semibold text-white">{stu.name}</td>
+                      <td className="px-4 py-3 text-slate-400">
+                        {stu.prodi} • {stu.kelas || 'TI-4A'} (Sem {stu.semester || 5})
+                      </td>
+                      <td className="px-4 py-3">
+                        {stu.faceEnrolled ? (
+                          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-950/80 text-emerald-300 border border-emerald-500/30">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                            <span>Wajah Terdaftar (Enrolled)</span>
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center space-x-1 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-950/80 text-amber-300 border border-amber-500/30">
+                            <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                            <span>Menunggu Scan Wajah</span>
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-[11px] text-slate-400 font-mono">
+                        {stu.enrolledAt ? new Date(stu.enrolledAt).toLocaleString('id-ID') : '-'}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <button
+                          onClick={() => handleDeleteStudent(stu.identifier, stu.name)}
+                          className="px-2.5 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-500/30 text-rose-300 text-[11px] font-medium transition-all"
+                          title="Hapus data mahasiswa dari BAAK"
+                        >
+                          Hapus
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="7" className="px-4 py-8 text-center text-slate-500">
+                      Belum ada data mahasiswa.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL: TAMBAH MAHASISWA BARU OLEH BAAK */}
+      {showAddStudentModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+          <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-7 relative overflow-hidden">
+            {/* Glow */}
+            <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/10 rounded-full blur-2xl pointer-events-none" />
+
+            {/* Modal Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-5 relative z-10">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-xl bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold">
+                  <Users className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-extrabold text-white text-base">Registrasi Mahasiswa Baru (BAAK)</h3>
+                  <p className="text-xs text-slate-400">Penerbitan akun akademik USINDO resmi</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowAddStudentModal(false)}
+                className="text-slate-400 hover:text-white text-sm p-1 rounded-lg hover:bg-slate-800"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Alert Messages */}
+            {addStudentError && (
+              <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs mb-4 flex items-center space-x-2">
+                <AlertTriangle className="w-4 h-4 text-rose-400 shrink-0" />
+                <span>{addStudentError}</span>
+              </div>
+            )}
+            {addStudentSuccess && (
+              <div className="p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs mb-4 flex items-center space-x-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>{addStudentSuccess}</span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleAddStudent} className="space-y-3.5 relative z-10 text-xs">
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1">
+                  Nama Lengkap Mahasiswa <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newStudentData.name}
+                  onChange={e => setNewStudentData({ ...newStudentData, name: e.target.value })}
+                  placeholder="Contoh: Budi Santoso"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label className="block font-semibold text-slate-300 mb-1">
+                  Nomor Induk Mahasiswa (NIM) <span className="text-rose-400">*</span>
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={newStudentData.identifier}
+                  onChange={e => setNewStudentData({ ...newStudentData, identifier: e.target.value })}
+                  placeholder="Contoh: 240131030"
+                  className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1">Program Studi</label>
+                  <input
+                    type="text"
+                    value={newStudentData.prodi}
+                    onChange={e => setNewStudentData({ ...newStudentData, prodi: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1">Kelas</label>
+                  <input
+                    type="text"
+                    value={newStudentData.kelas}
+                    onChange={e => setNewStudentData({ ...newStudentData, kelas: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1">Semester</label>
+                  <input
+                    type="number"
+                    value={newStudentData.semester}
+                    onChange={e => setNewStudentData({ ...newStudentData, semester: Number(e.target.value) })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white font-mono"
+                  />
+                </div>
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1">Kata Sandi Awal</label>
+                  <input
+                    type="text"
+                    value={newStudentData.password}
+                    onChange={e => setNewStudentData({ ...newStudentData, password: e.target.value })}
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white font-mono"
+                  />
+                </div>
+              </div>
+
+              <div className="pt-3 flex items-center justify-end space-x-2">
+                <button
+                  type="button"
+                  onClick={() => setShowAddStudentModal(false)}
+                  className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
+                >
+                  Batal
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmittingStudent}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold shadow-lg shadow-blue-600/30 disabled:opacity-50"
+                >
+                  {isSubmittingStudent ? 'Menyimpan...' : 'Daftarkan Mahasiswa'}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}

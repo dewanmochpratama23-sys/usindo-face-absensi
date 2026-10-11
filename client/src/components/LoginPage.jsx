@@ -11,8 +11,11 @@ import {
   EyeOff,
   GraduationCap,
   KeyRound,
-  CheckCircle2
+  CheckCircle2,
+  Users,
+  PlusCircle
 } from 'lucide-react';
+import { api } from '../services/api';
 
 export default function LoginPage({ onLogin, error }) {
   const [identifier, setIdentifier] = useState('');
@@ -21,7 +24,36 @@ export default function LoginPage({ onLogin, error }) {
   const [loading, setLoading] = useState(false);
   const [localError, setLocalError] = useState(null);
 
-  const studentsList = [
+  // Self Registration State
+  const [showRegisterModal, setShowRegisterModal] = useState(false);
+  const [regLoading, setRegLoading] = useState(false);
+  const [regError, setRegError] = useState(null);
+  const [registerSuccess, setRegisterSuccess] = useState(null);
+  const [regData, setRegData] = useState({
+    name: '',
+    identifier: '',
+    prodi: 'Teknik Informatika',
+    kelas: 'TI-4A',
+    semester: 5,
+    password: 'usindomaju01'
+  });
+
+  const [liveStudents, setLiveStudents] = useState([]);
+
+  const loadStudents = async () => {
+    try {
+      const res = await api.getStudents();
+      if (res && res.length > 0) {
+        setLiveStudents(res);
+      }
+    } catch (e) {}
+  };
+
+  useEffect(() => {
+    loadStudents();
+  }, []);
+
+  const defaultStudents = [
     { nim: '240131009', name: 'Dewan Moch Pratama', kelas: 'TI-4A', role: 'mahasiswa' },
     { nim: '240131012', name: 'Fakhri Fadhlurrahman', kelas: 'TI-4A', role: 'mahasiswa' },
     { nim: '240131019', name: 'Muhammad Falah', kelas: 'TI-4A', role: 'mahasiswa' },
@@ -30,6 +62,20 @@ export default function LoginPage({ onLogin, error }) {
     { nim: '19850101', name: 'Bapak ANDRIYANA S.T., M.Kom.', kelas: 'Dosen Pengampu', role: 'dosen' },
     { nim: 'admin', name: 'Biro BAAK USINDO', kelas: 'Admin Akademik', role: 'admin' },
   ];
+
+  const studentsList = liveStudents.length > 0 
+    ? [
+        ...liveStudents.map(s => ({
+          nim: s.identifier,
+          name: s.name,
+          kelas: s.kelas || 'TI-4A',
+          role: 'mahasiswa',
+          faceEnrolled: s.faceEnrolled
+        })),
+        { nim: '19850101', name: 'Bapak ANDRIYANA S.T., M.Kom.', kelas: 'Dosen Pengampu', role: 'dosen' },
+        { nim: 'admin', name: 'Biro BAAK USINDO', kelas: 'Admin Akademik', role: 'admin' }
+      ]
+    : defaultStudents;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -65,6 +111,27 @@ export default function LoginPage({ onLogin, error }) {
       setLocalError(err.message || 'Login gagal.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleRegister = async (e) => {
+    e.preventDefault();
+    setRegError(null);
+    setRegLoading(true);
+    try {
+      const res = await api.registerStudent(regData);
+      setRegisterSuccess(res.message);
+      setIdentifier(regData.identifier.trim());
+      setPassword(regData.password || 'usindomaju01');
+      await loadStudents();
+      setTimeout(() => {
+        setShowRegisterModal(false);
+        setRegisterSuccess(null);
+      }, 1800);
+    } catch (err) {
+      setRegError(err.message || 'Pendaftaran akun mahasiswa gagal');
+    } finally {
+      setRegLoading(false);
     }
   };
 
@@ -187,6 +254,19 @@ export default function LoginPage({ onLogin, error }) {
                     <span>{loading ? 'Memverifikasi Kredensial...' : 'Masuk ke Akun Saya'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setRegError(null);
+                      setRegisterSuccess(null);
+                      setShowRegisterModal(true);
+                    }}
+                    className="w-full mt-2.5 py-2.5 rounded-xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 text-cyan-300 hover:text-white font-semibold text-xs transition-all flex items-center justify-center space-x-1.5 cursor-pointer"
+                  >
+                    <PlusCircle className="w-4 h-4 text-cyan-400" />
+                    <span>Belum Terdaftar? Buat Akun Mahasiswa Baru</span>
+                  </button>
                 </div>
               </form>
             </div>
@@ -280,6 +360,139 @@ export default function LoginPage({ onLogin, error }) {
           </div>
 
         </div>
+
+        {/* MODAL REGISTRASI MAHASISWA BARU */}
+        {showRegisterModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/85 backdrop-blur-md">
+            <div className="w-full max-w-lg bg-slate-900 border border-slate-800 rounded-3xl shadow-2xl p-6 sm:p-7 relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-48 h-48 bg-blue-600/10 rounded-full blur-2xl pointer-events-none" />
+
+              <div className="flex items-center justify-between pb-4 border-b border-slate-800 mb-5 relative z-10">
+                <div className="flex items-center space-x-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-blue-600 to-cyan-500 flex items-center justify-center font-bold text-white shadow-md">
+                    <GraduationCap className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <h3 className="font-extrabold text-white text-base">Registrasi Akun Mahasiswa Baru</h3>
+                    <p className="text-xs text-slate-400">USINDO (Universitas Sehati Indonesia)</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowRegisterModal(false)}
+                  className="text-slate-400 hover:text-white text-sm p-1 rounded-lg hover:bg-slate-800"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {regError && (
+                <div className="p-3 rounded-xl bg-rose-950/70 border border-rose-500/40 text-rose-200 text-xs mb-4 flex items-center space-x-2">
+                  <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />
+                  <span>{regError}</span>
+                </div>
+              )}
+              {registerSuccess && (
+                <div className="p-3 rounded-xl bg-emerald-950/70 border border-emerald-500/40 text-emerald-200 text-xs mb-4 flex items-center space-x-2">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                  <span>{registerSuccess}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleRegister} className="space-y-3.5 relative z-10 text-xs">
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1">
+                    Nama Lengkap Mahasiswa <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={regData.name}
+                    onChange={e => setRegData({ ...regData, name: e.target.value })}
+                    placeholder="Contoh: Farhan Nurhadi"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block font-semibold text-slate-300 mb-1">
+                    Nomor Induk Mahasiswa (NIM) <span className="text-rose-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={regData.identifier}
+                    onChange={e => setRegData({ ...regData, identifier: e.target.value })}
+                    placeholder="Contoh: 240131031"
+                    className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 font-mono focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-slate-300 mb-1">Program Studi</label>
+                    <input
+                      type="text"
+                      value={regData.prodi}
+                      onChange={e => setRegData({ ...regData, prodi: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-slate-300 mb-1">Kelas</label>
+                    <input
+                      type="text"
+                      value={regData.kelas}
+                      onChange={e => setRegData({ ...regData, kelas: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="block font-semibold text-slate-300 mb-1">Semester</label>
+                    <input
+                      type="number"
+                      value={regData.semester}
+                      onChange={e => setRegData({ ...regData, semester: Number(e.target.value) })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white font-mono"
+                    />
+                  </div>
+                  <div>
+                    <label className="block font-semibold text-slate-300 mb-1">Kata Sandi Akun</label>
+                    <input
+                      type="text"
+                      value={regData.password}
+                      onChange={e => setRegData({ ...regData, password: e.target.value })}
+                      className="w-full bg-slate-950 border border-slate-800 rounded-xl px-3.5 py-2.5 text-white font-mono"
+                    />
+                  </div>
+                </div>
+
+                <p className="text-[11px] text-slate-400 bg-slate-950/80 p-2.5 rounded-xl border border-slate-800/80">
+                  ℹ️ Setelah akun terdaftar, mahasiswa dapat langsung login untuk memindai 3 sudut wajah di menu <strong>Pendaftaran Wajah (Enrollment)</strong>.
+                </p>
+
+                <div className="pt-2 flex items-center justify-end space-x-2">
+                  <button
+                    type="button"
+                    onClick={() => setShowRegisterModal(false)}
+                    className="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-semibold"
+                  >
+                    Batal
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={regLoading}
+                    className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 via-indigo-600 to-cyan-500 hover:from-blue-500 hover:to-cyan-400 text-white font-bold shadow-lg shadow-blue-600/30 disabled:opacity-50"
+                  >
+                    {regLoading ? 'Mendaftarkan...' : 'Daftarkan Akun Mahasiswa'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
         {/* Global Footer */}
         <div className="text-center mt-6 text-xs text-slate-500">
