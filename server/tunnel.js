@@ -105,23 +105,32 @@ async function main() {
         console.log('  - Kata Sandi Semua Akun: usindomaju01\n');
         console.log('*******************************************************************');
 
-        // Copy to clipboard
-        try {
-          const clipProc = spawn('clip');
-          clipProc.stdin.write(url);
-          clipProc.stdin.end();
-          console.log('  [OK] Link sudah OTOMATIS DISALIN! Tinggal Paste (Ctrl+V) di WhatsApp.');
-        } catch (e) {}
+        console.log('  [..] Menunggu propagasi DNS global Cloudflare (5 detik)...');
 
-        // Buka otomatis di browser
-        try {
-          spawn('cmd', ['/c', 'start', '', url]);
-          console.log('  [OK] Membuka link resmi di browser kamu...');
-        } catch (e) {}
+        setTimeout(() => {
+          // Flush DNS cache locally so browser picks up the new domain immediately
+          try {
+            spawn('cmd', ['/c', 'ipconfig /flushdns']);
+          } catch (e) {}
 
-        console.log('*******************************************************************\n');
-        console.log('PENTING: Jendela ini MEMANG HARUS TETAP TERBUKA untuk menjaga link');
-        console.log('tetap aktif. Jangan ditutup selama teman-teman masih menggunakan aplikasi.\n');
+          // Copy to clipboard
+          try {
+            const clipProc = spawn('clip');
+            clipProc.stdin.write(url);
+            clipProc.stdin.end();
+            console.log('  [OK] Link sudah OTOMATIS DISALIN! Tinggal Paste (Ctrl+V) di WhatsApp.');
+          } catch (e) {}
+
+          // Buka otomatis di browser
+          try {
+            spawn('cmd', ['/c', 'start', '', url]);
+            console.log('  [OK] Membuka link resmi di browser kamu...');
+          } catch (e) {}
+
+          console.log('*******************************************************************\n');
+          console.log('PENTING: Jendela ini MEMANG HARUS TETAP TERBUKA untuk menjaga link');
+          console.log('tetap aktif. Jangan ditutup selama teman-teman masih menggunakan aplikasi.\n');
+        }, 5000);
       }
     }
   }
