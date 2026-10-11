@@ -6,3 +6,7 @@ mingit/
 *.log
 .DS_Store
 Thumbs.db
+
+# Dokumen & Skrip Rahasia Presentasi Internal Kelompok
+skrip-presentasi.txt
+*skrip*

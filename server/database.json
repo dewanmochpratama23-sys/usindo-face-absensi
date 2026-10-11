@@ -2812,6 +2812,97 @@
       "ip": "::1",
       "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
       "details": "Login berhasil sebagai admin"
+    },
+    {
+      "id": "AUD-MV3FTJYEJIF8",
+      "timestamp": "2026-10-11T06:23:54.182Z",
+      "action": "LOGIN_SUCCESS",
+      "identifier": "19850101",
+      "name": "Bapak ANDRIYANA S.T., M.Kom.",
+      "role": "dosen",
+      "status": "SUCCESS",
+      "similarityScore": null,
+      "ip": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "details": "Login berhasil sebagai dosen"
+    },
+    {
+      "id": "AUD-MV3FTOM5SF2Z",
+      "timestamp": "2026-10-11T06:24:00.221Z",
+      "action": "LOGIN_SUCCESS",
+      "identifier": "admin",
+      "name": "Biro Administrasi Akademik (BAAK)",
+      "role": "admin",
+      "status": "SUCCESS",
+      "similarityScore": null,
+      "ip": "::1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "details": "Login berhasil sebagai admin"
+    },
+    {
+      "id": "AUD-MV3G90WBKAB0",
+      "timestamp": "2026-10-11T06:35:55.979Z",
+      "action": "LOGIN_SUCCESS",
+      "identifier": "240131009",
+      "name": "Dewan Moch Pratama",
+      "role": "mahasiswa",
+      "status": "SUCCESS",
+      "similarityScore": null,
+      "ip": "103.172.42.131",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "details": "Login berhasil sebagai mahasiswa"
+    },
+    {
+      "id": "AUD-MV3G97IJGRYT",
+      "timestamp": "2026-10-11T06:36:04.555Z",
+      "action": "LOGIN_SUCCESS",
+      "identifier": "240131012",
+      "name": "Fakhri Fadhlurrahman",
+      "role": "mahasiswa",
+      "status": "SUCCESS",
+      "similarityScore": null,
+      "ip": "103.172.42.131",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "details": "Login berhasil sebagai mahasiswa"
+    },
+    {
+      "id": "AUD-MV3G9CQ8KZ83",
+      "timestamp": "2026-10-11T06:36:11.312Z",
+      "action": "LOGIN_SUCCESS",
+      "identifier": "admin",
+      "name": "Biro Administrasi Akademik (BAAK)",
+      "role": "admin",
+      "status": "SUCCESS",
+      "similarityScore": null,
+      "ip": "103.172.42.131",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "details": "Login berhasil sebagai admin"
+    },
+    {
+      "id": "AUD-MV3GC148E0G6",
+      "timestamp": "2026-10-11T06:38:16.232Z",
+      "action": "LOGIN_SUCCESS",
+      "identifier": "240131009",
+      "name": "Dewan Moch Pratama",
+      "role": "mahasiswa",
+      "status": "SUCCESS",
+      "similarityScore": null,
+      "ip": "103.172.42.131",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "details": "Login berhasil sebagai mahasiswa"
+    },
+    {
+      "id": "AUD-MV3GCSUXN2F6",
+      "timestamp": "2026-10-11T06:38:52.185Z",
+      "action": "LOGIN_SUCCESS",
+      "identifier": "240131009",
+      "name": "Dewan Moch Pratama",
+      "role": "mahasiswa",
+      "status": "SUCCESS",
+      "similarityScore": null,
+      "ip": "103.172.42.131",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/155.0.0.0 Safari/537.36 Edg/155.0.0.0",
+      "details": "Login berhasil sebagai mahasiswa"
     }
   ]
 }
