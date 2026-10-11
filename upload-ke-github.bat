@@ -34,20 +34,15 @@ if %errorlevel% neq 0 (
 
 git branch -M main
 
+set DEFAULT_URL=https://github.com/dewanmochpratama23-sys/usindo-face-absensi.git
 echo.
 echo ===============================================================================
-echo  LANGKAH TERAKHIR:
-echo  1. Buka browser ke repository GitHub yang sudah Anda buat tadi.
-echo  2. Salin URL HTTPS-nya (contoh: https://github.com/nama-anda/usindo-face-absensi.git)
+echo  URL Repository GitHub Anda yang terdeteksi:
+echo  %DEFAULT_URL%
 echo ===============================================================================
 echo.
-set /p REPO_URL=">> Tempel (Paste) URL GitHub Anda di sini lalu tekan ENTER: "
-
-if "%REPO_URL%"=="" (
-    echo [ERROR] URL GitHub tidak boleh kosong!
-    pause
-    exit /b
-)
+set /p REPO_URL=">> Tekan ENTER langsung untuk mulai upload (atau paste URL lain): "
+if "%REPO_URL%"=="" set REPO_URL=%DEFAULT_URL%
 
 echo.
 echo [4/4] Mengunggah file ke GitHub: %REPO_URL% ...
