@@ -17,13 +17,29 @@ if %errorlevel% neq 0 (
 )
 echo       Node.js terdeteksi: OK!
 echo.
-echo [2/3] Menjalankan Server Backend USINDO (Port 5000)...
-cd /d "%~dp0server"
-start "USINDO Attendance Server" node server.js
+echo [2/3] Memeriksa status Server Backend USINDO (Port 5000)...
+curl.exe -s --connect-timeout 1 http://127.0.0.1:5000/api/health >nul 2>nul
+if %errorlevel% equ 0 (
+    echo       Server backend sudah AKTIF dan SIAP di port 5000!
+) else (
+    echo       Menyalakan Server Backend di latar belakang...
+    cd /d "%~dp0server"
+    start "USINDO Attendance Server" node server.js
+    
+    echo       Menunggu server siap...
+    set /a attempts=0
+:wait_loop
+    timeout /t 1 /nobreak >nul
+    set /a attempts+=1
+    curl.exe -s --connect-timeout 1 http://127.0.0.1:5000/api/health >nul 2>nul
+    if %errorlevel% neq 0 (
+        if %attempts% lss 15 goto wait_loop
+    )
+    echo       Server backend berhasil terhubung!
+)
 
 echo.
 echo [3/3] Membuka Portal Absensi di Browser...
-timeout /t 2 /nobreak >nul
 start http://localhost:5000
 
 echo.
