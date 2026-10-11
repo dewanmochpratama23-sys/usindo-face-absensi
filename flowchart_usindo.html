@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flowchart Sistem Absensi Face Recognition USINDO</title>
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <style>
+    @media print {
+      body { background: white !important; color: black !important; }
+      .no-print { display: none !important; }
+      .print-page { page-break-after: always; }
+      svg text { fill: #0f172a !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen antialiased p-4 sm:p-6 lg:p-8">
+
+  <!-- Header Banner -->
+  <div class="max-w-6xl mx-auto mb-6 bg-gradient-to-r from-blue-950/80 via-indigo-950/70 to-slate-900 border border-blue-800/40 rounded-2xl p-6 shadow-2xl relative overflow-hidden">
+    <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center space-x-2.5 mb-2">
+          <span class="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-600 text-white shadow-sm">USINDO</span>
+          <span class="text-xs text-blue-300 font-semibold tracking-wider uppercase">Universitas Sehati Indonesia • Semester 5</span>
+        </div>
+        <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+          Flowchart Interaktif & Panduan Presentasi Face Recognition
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-300 mt-1 max-w-2xl">
+          Dosen Pengampu: <strong class="text-white">Bapak ANDRIYANA S.T., M.Kom.</strong> • Mata Kuliah: Rekayasa Sistem Berbasis AI Biometrik
+        </p>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="flex items-center gap-2 no-print">
+        <button onclick="window.print()" class="px-4 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs shadow-lg shadow-blue-600/30 transition-all flex items-center space-x-2 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"></path></svg>
+          <span>Cetak / Simpan PDF</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Container -->
+  <div class="max-w-6xl mx-auto space-y-6">
+
+    <!-- Navigation Tabs -->
+    <div class="no-print flex flex-wrap gap-2 p-1.5 bg-slate-900 border border-slate-800 rounded-2xl shadow-lg">
+      <button onclick="switchTab('tab-enrollment')" id="btn-enrollment" class="tab-btn active px-4 py-2.5 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white shadow-md">
+        1. Pendaftaran Wajah (Enrollment)
+      </button>
+      <button onclick="switchTab('tab-recognition')" id="btn-recognition" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+        2. Presensi Harian (Recognition & Liveness)
+      </button>
+      <button onclick="switchTab('tab-monitoring')" id="btn-monitoring" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+        3. Monitoring & Syarat Ujian (Dosen/Admin)
+      </button>
+      <button onclick="switchTab('tab-legend')" id="btn-legend" class="tab-btn px-4 py-2.5 rounded-xl text-xs font-bold transition-all text-slate-400 hover:text-white hover:bg-slate-800">
+        ℹ️ Standar Simbol ISO & Panduan
+      </button>
+    </div>
+
+    <!-- Active Presentation Script Floating Bar -->
+    <div class="p-4 bg-gradient-to-r from-slate-900 via-blue-950/40 to-slate-900 border border-blue-500/30 rounded-2xl shadow-xl flex items-start space-x-3.5">
+      <div class="w-8 h-8 rounded-lg bg-blue-600/30 text-blue-400 flex items-center justify-center font-bold text-sm shrink-0 mt-0.5">
+        🎙️
+      </div>
+      <div>
+        <div class="text-[11px] font-bold uppercase tracking-wider text-blue-400">
+          Skrip Kata-demi-Kata untuk Anda Bicara (Klik kotak mana saja pada flowchart):
+        </div>
+        <div id="spoken-text" class="text-xs sm:text-sm text-slate-200 font-medium mt-1 leading-relaxed">
+          "Silakan klik salah satu kotak pada diagram alur di bawah untuk melihat kalimat penjelasan resmi yang harus Anda ucapkan di hadapan Bapak Dosen."
+        </div>
+      </div>
+    </div>
+
+    <!-- TAB 1: ENROLLMENT FLOWCHART -->
+    <div id="tab-enrollment" class="tab-content bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+        <div>
+          <span class="text-xs font-bold text-cyan-400 uppercase tracking-widest">Tahap 1 dari 3</span>
+          <h2 class="text-lg font-black text-white">Flowchart Pendaftaran Wajah (Biometric Enrollment)</h2>
+          <p class="text-xs text-slate-400">Alur ketika mahasiswa mendaftarkan identitas biometrik 3 sudut (Depan, Kiri, Kanan) pertama kali.</p>
+        </div>
+        <span class="px-3 py-1 bg-cyan-950/80 text-cyan-300 border border-cyan-500/30 text-xs font-mono rounded-lg">
+          Zero Raw Photos
+        </span>
+      </div>
+
+      <!-- SVG Flowchart Enrollment -->
+      <div class="overflow-x-auto pb-4 flex justify-center">
+        <svg viewBox="0 0 760 920" class="w-full max-w-2xl select-none" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="#38bdf8" />
+            </marker>
+            <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="#f87171" />
+            </marker>
+            <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 8 5 L 0 9 z" fill="#4ade80" />
+            </marker>
+          </defs>
+
+          <!-- 1. Start -->
+          <g class="cursor-pointer group" onclick="setScript('Mulai: Mahasiswa membuka portal website sistem absensi USINDO melalui peramban laptop atau smartphone.')">
+            <rect x="250" y="20" width="260" height="46" rx="23" fill="#1e293b" stroke="#38bdf8" stroke-width="2.5"/>
+            <text x="380" y="48" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">MULAI (Start)</text>
+          </g>
+
+          <line x1="380" y1="66" x2="380" y2="94" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 2. Input NIM & Password (Parallelogram) -->
+          <g class="cursor-pointer group" onclick="setScript('Input Kredensial: Mahasiswa memasukkan NIM dan kata sandi akun untuk memverifikasi identitas resmi.')">
+            <polygon points="230,140 260,95 530,95 500,140" fill="#0f172a" stroke="#60a5fa" stroke-width="2"/>
+            <text x="380" y="117" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Input: NIM &amp; Kata Sandi</text>
+            <text x="380" y="132" text-anchor="middle" fill="#94a3b8" font-size="10">(Autentikasi Mahasiswa USINDO)</text>
+          </g>
+
+          <line x1="380" y1="140" x2="380" y2="170" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 3. Decision Auth -->
+          <g class="cursor-pointer group" onclick="setScript('Validasi Autentikasi: Sistem mencocokkan kredensial dengan database. Jika salah, mahasiswa diminta memasukkan ulang.')">
+            <polygon points="380,170 480,210 380,250 280,210" fill="#1e1b4b" stroke="#818cf8" stroke-width="2"/>
+            <text x="380" y="206" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Kredensial Valid?</text>
+            <text x="380" y="222" text-anchor="middle" fill="#c7d2fe" font-size="10">(NIM &amp; Hash Password)</text>
+          </g>
+
+          <!-- Branch Auth: Tidak -->
+          <line x1="480" y1="210" x2="570" y2="210" stroke="#f87171" stroke-width="2" />
+          <line x1="570" y1="210" x2="570" y2="117" stroke="#f87171" stroke-width="2" />
+          <line x1="570" y1="117" x2="520" y2="117" stroke="#f87171" stroke-width="2" marker-end="url(#arrow-red)" />
+          <text x="515" y="200" fill="#f87171" font-size="11" font-weight="bold">Tidak</text>
+
+          <!-- Branch Auth: Ya -->
+          <line x1="380" y1="250" x2="380" y2="280" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+          <text x="390" y="268" fill="#4ade80" font-size="11" font-weight="bold">Ya</text>
+
+          <!-- 4. Decision: Sudah Enrolled? -->
+          <g class="cursor-pointer group" onclick="setScript('Pemeriksaan Status: Sistem mengecek apakah mahasiswa sudah pernah mendaftarkan wajah sebelumnya atau belum.')">
+            <polygon points="380,280 480,320 380,360 280,320" fill="#1e1b4b" stroke="#818cf8" stroke-width="2"/>
+            <text x="380" y="316" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Sudah Enrolled?</text>
+            <text x="380" y="330" text-anchor="middle" fill="#c7d2fe" font-size="10">(Status faceEnrolled)</text>
+          </g>
+
+          <!-- Branch Enrolled: Ya -> Langsung Selesai -->
+          <line x1="280" y1="320" x2="160" y2="320" stroke="#fbbf24" stroke-width="2" />
+          <line x1="160" y1="320" x2="160" y2="820" stroke="#fbbf24" stroke-width="2" />
+          <line x1="160" y1="820" x2="260" y2="820" stroke="#fbbf24" stroke-width="2" marker-end="url(#arrow)" />
+          <text x="195" y="312" fill="#fbbf24" font-size="11" font-weight="bold">Ya (Sudah Aktif)</text>
+
+          <!-- Branch Enrolled: Tidak -> Lanjut Pendaftaran -->
+          <line x1="380" y1="360" x2="380" y2="390" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+          <text x="390" y="378" fill="#4ade80" font-size="11" font-weight="bold">Tidak (Belum)</text>
+
+          <!-- 5. Request Camera Access -->
+          <g class="cursor-pointer group" onclick="setScript('Izin Kamera: Browser meminta hak akses webcam atau kamera depan smartphone untuk menangkap citra wajah.')">
+            <rect x="250" y="390" width="260" height="44" rx="8" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+            <text x="380" y="413" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Minta Izin Akses Kamera</text>
+            <text x="380" y="426" text-anchor="middle" fill="#94a3b8" font-size="10">(Webcam / Kamera Depan HP)</text>
+          </g>
+
+          <line x1="380" y1="434" x2="380" y2="464" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 6. Capture 3 Pose Angles (Process) -->
+          <g class="cursor-pointer group" onclick="setScript('Pengambilan 3 Pose: Mahasiswa dipandu untuk mengambil 3 sudut wajah secara berurutan: Hadap Depan, Tengok Kiri 25-30 derajat, dan Tengok Kanan 25-30 derajat.')">
+            <rect x="220" y="464" width="320" height="70" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <text x="380" y="488" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">Pengambilan 3 Sudut Pose Wajah</text>
+            <text x="380" y="506" text-anchor="middle" fill="#f8fafc" font-size="11">1. Pose Depan • 2. Tengok Kiri • 3. Tengok Kanan</text>
+            <text x="380" y="522" text-anchor="middle" fill="#94a3b8" font-size="10">(Panduan HUD Oval Otomatis)</text>
+          </g>
+
+          <line x1="380" y1="534" x2="380" y2="564" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 7. Extract 128-d Embedding (Process) -->
+          <g class="cursor-pointer group" onclick="setScript('Ekstraksi Biometrik: Model AI Deep Learning mengubah citra wajah menjadi vektor fitur 128-dimensi yang dinormalisasi menjadi unit vector (||v|| = 1.0).')">
+            <rect x="220" y="564" width="320" height="52" rx="10" fill="#1e293b" stroke="#818cf8" stroke-width="2"/>
+            <text x="380" y="587" text-anchor="middle" fill="#c7d2fe" font-size="12" font-weight="bold">Ekstraksi 128-d Biometric Embedding</text>
+            <text x="380" y="604" text-anchor="middle" fill="#94a3b8" font-size="10">Normalisasi Vektor Unit (||v|| = 1.0)</text>
+          </g>
+
+          <line x1="380" y1="616" x2="380" y2="646" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 8. Privacy First: Drop Raw Photo (Process) -->
+          <g class="cursor-pointer group" onclick="setScript('Prinsip Perlindungan Privasi: Foto mentah mahasiswa sama sekali TIDAK disimpan ke server. Foto segera dihapus dari memori begitu vektor biometrik berhasil diekstraksi.')">
+            <rect x="220" y="646" width="320" height="52" rx="10" fill="#450a0a" stroke="#f87171" stroke-width="2"/>
+            <text x="380" y="669" text-anchor="middle" fill="#fca5a5" font-size="12" font-weight="bold">🔒 Privacy First: Hapus Foto Mentah</text>
+            <text x="380" y="686" text-anchor="middle" fill="#fecaca" font-size="10">(Raw photo dibuang dari memori RAM)</text>
+          </g>
+
+          <line x1="380" y1="698" x2="380" y2="728" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 9. Save Encrypted Vector to DB -->
+          <g class="cursor-pointer group" onclick="setScript('Penyimpanan Aman: Vektor numerik 128-d disimpan ke database JSON sebagai nilai referensi pendaftaran untuk absensi mendatang.')">
+            <polygon points="230,772 260,728 530,728 500,772" fill="#0f172a" stroke="#34d399" stroke-width="2"/>
+            <text x="380" y="750" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Simpan Vektor Referensi ke Database</text>
+            <text x="380" y="764" text-anchor="middle" fill="#6ee7b7" font-size="10">(Tersimpan Aman di server/database.json)</text>
+          </g>
+
+          <line x1="380" y1="772" x2="380" y2="802" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+
+          <!-- 10. Finish -->
+          <g class="cursor-pointer group" onclick="setScript('Selesai: Akun mahasiswa kini resmi berstatus Enrolled dan siap melakukan absensi harian.')">
+            <rect x="260" y="802" width="240" height="46" rx="23" fill="#064e3b" stroke="#34d399" stroke-width="2.5"/>
+            <text x="380" y="830" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">SELESAI (Enrolled 100%)</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- TAB 2: RECOGNITION & LIVENESS FLOWCHART -->
+    <div id="tab-recognition" class="tab-content hidden bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+        <div>
+          <span class="text-xs font-bold text-emerald-400 uppercase tracking-widest">Tahap 2 dari 3</span>
+          <h2 class="text-lg font-black text-white">Flowchart Absensi Harian (Recognition &amp; Liveness Detection)</h2>
+          <p class="text-xs text-slate-400">Verifikasi wajah secara real-time, validasi geofencing GPS kampus, dan perhitungan cosine similarity.</p>
+        </div>
+        <span class="px-3 py-1 bg-emerald-950/80 text-emerald-300 border border-emerald-500/30 text-xs font-mono rounded-lg">
+          Threshold &gt; 85%
+        </span>
+      </div>
+
+      <!-- SVG Flowchart Recognition -->
+      <div class="overflow-x-auto pb-4 flex justify-center">
+        <svg viewBox="0 0 800 1060" class="w-full max-w-2xl select-none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 1. Start -->
+          <g class="cursor-pointer group" onclick="setScript('Mulai: Mahasiswa membuka menu Absensi Harian pada saat jadwal perkuliahan aktif.')">
+            <rect x="270" y="20" width="260" height="46" rx="23" fill="#1e293b" stroke="#34d399" stroke-width="2.5"/>
+            <text x="400" y="48" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">MULAI ABSENSI</text>
+          </g>
+
+          <line x1="400" y1="66" x2="400" y2="96" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 2. Select Active Course Schedule -->
+          <g class="cursor-pointer group" onclick="setScript('Pilih Jadwal: Mahasiswa memilih mata kuliah aktif pertemuan hari ini, misalnya Pertemuan 8 Kecerdasan Buatan.')">
+            <polygon points="250,140 280,96 550,96 520,140" fill="#0f172a" stroke="#60a5fa" stroke-width="2"/>
+            <text x="400" y="118" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Pilih Jadwal Perkuliahan Aktif</text>
+            <text x="400" y="132" text-anchor="middle" fill="#94a3b8" font-size="10">(Mata Kuliah &amp; Pertemuan Hari Ini)</text>
+          </g>
+
+          <line x1="400" y1="140" x2="400" y2="170" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 3. Decision Session Open? -->
+          <g class="cursor-pointer group" onclick="setScript('Cek Sesi Dosen: Sistem memeriksa apakah sesi presensi sudah dibuka oleh dosen pengampu (Bapak Andriyana).')">
+            <polygon points="400,170 510,210 400,250 290,210" fill="#1e1b4b" stroke="#818cf8" stroke-width="2"/>
+            <text x="400" y="206" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Sesi Absensi Dibuka?</text>
+            <text x="400" y="222" text-anchor="middle" fill="#c7d2fe" font-size="10">(Parameter isOpen == true)</text>
+          </g>
+
+          <!-- Branch Session: Ditutup -->
+          <line x1="510" y1="210" x2="620" y2="210" stroke="#f87171" stroke-width="2" />
+          <line x1="620" y1="210" x2="620" y2="970" stroke="#f87171" stroke-width="2" />
+          <line x1="620" y1="970" x2="530" y2="970" stroke="#f87171" stroke-width="2" marker-end="url(#arrow-red)" />
+          <text x="535" y="200" fill="#f87171" font-size="11" font-weight="bold">Ditutup</text>
+
+          <!-- Branch Session: Terbuka -->
+          <line x1="400" y1="250" x2="400" y2="280" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+          <text x="410" y="268" fill="#4ade80" font-size="11" font-weight="bold">Terbuka</text>
+
+          <!-- 4. Geofencing GPS Check -->
+          <g class="cursor-pointer group" onclick="setScript('Validasi Geofencing: Sistem menghitung jarak Haversine antara koordinat GPS perangkat mahasiswa dengan lokasi Kampus Terpadu USINDO.')">
+            <rect x="250" y="280" width="300" height="46" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <text x="400" y="302" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">Validasi Lokasi GPS (Geofencing)</text>
+            <text x="400" y="318" text-anchor="middle" fill="#94a3b8" font-size="10">Rumus Haversine Jarak ke Kampus USINDO</text>
+          </g>
+
+          <line x1="400" y1="326" x2="400" y2="356" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 5. Decision: Radius <= 250m? -->
+          <g class="cursor-pointer group" onclick="setScript('Ambang Jarak: Mahasiswa wajib berada dalam radius maksimal 250 meter dari area kampus untuk mencegah absensi dari luar kampus.')">
+            <polygon points="400,356 510,396 400,436 290,396" fill="#1e1b4b" stroke="#818cf8" stroke-width="2"/>
+            <text x="400" y="392" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Jarak &lt;= 250 Meter?</text>
+            <text x="400" y="408" text-anchor="middle" fill="#c7d2fe" font-size="10">(Radius Kampus USINDO)</text>
+          </g>
+
+          <!-- Branch GPS: Di Luar -->
+          <line x1="290" y1="396" x2="170" y2="396" stroke="#f87171" stroke-width="2" />
+          <line x1="170" y1="396" x2="170" y2="970" stroke="#f87171" stroke-width="2" />
+          <line x1="170" y1="970" x2="270" y2="970" stroke="#f87171" stroke-width="2" marker-end="url(#arrow-red)" />
+          <text x="200" y="388" fill="#f87171" font-size="11" font-weight="bold">Di Luar Kampus</text>
+
+          <!-- Branch GPS: Di Dalam -->
+          <line x1="400" y1="436" x2="400" y2="466" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+          <text x="410" y="452" fill="#4ade80" font-size="11" font-weight="bold">Dalam Kampus</text>
+
+          <!-- 6. Liveness Detection Challenge (Process) -->
+          <g class="cursor-pointer group" onclick="setScript('Liveness Detection Anti-Spoofing: Kamera real-time meminta mahasiswa mengedipkan mata (Eye Aspect Ratio) atau tersenyum (Mouth Aspect Ratio) untuk membuktikan keaslian subjek hidup.')">
+            <rect x="230" y="466" width="340" height="56" rx="10" fill="#1e293b" stroke="#fbbf24" stroke-width="2"/>
+            <text x="400" y="490" text-anchor="middle" fill="#fbbf24" font-size="12" font-weight="bold">👁️ Uji Liveness Detection (Anti-Spoofing)</text>
+            <text x="400" y="508" text-anchor="middle" fill="#fef3c7" font-size="10">Deteksi Kedipan (EAR) atau Senyuman (MAR)</text>
+          </g>
+
+          <line x1="400" y1="522" x2="400" y2="552" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 7. Decision: Lolos Liveness? -->
+          <g class="cursor-pointer group" onclick="setScript('Validasi Liveness: Jika terdeteksi foto statis atau tidak ada respons gerakan biologis, presensi dibatalkan.')">
+            <polygon points="400,552 510,592 400,632 290,592" fill="#1e1b4b" stroke="#818cf8" stroke-width="2"/>
+            <text x="400" y="588" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Lolos Liveness?</text>
+            <text x="400" y="604" text-anchor="middle" fill="#c7d2fe" font-size="10">(Bukan Foto Statis HP)</text>
+          </g>
+
+          <!-- Branch Liveness: Gagal -->
+          <line x1="510" y1="592" x2="590" y2="592" stroke="#f87171" stroke-width="2" />
+          <line x1="590" y1="592" x2="590" y2="494" stroke="#f87171" stroke-width="2" />
+          <line x1="590" y1="494" x2="570" y2="494" stroke="#f87171" stroke-width="2" marker-end="url(#arrow-red)" />
+          <text x="525" y="582" fill="#f87171" font-size="11" font-weight="bold">Gagal (Coba Lagi)</text>
+
+          <!-- Branch Liveness: Lolos -->
+          <line x1="400" y1="632" x2="400" y2="662" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+          <text x="410" y="648" fill="#4ade80" font-size="11" font-weight="bold">Lolos</text>
+
+          <!-- 8. Extract & Match Cosine Similarity (Process) -->
+          <g class="cursor-pointer group" onclick="setScript('Pencocokan Embedding: Sistem menghitung Cosine Similarity antara vektor wajah real-time dengan vektor referensi terdaftar di database.')">
+            <rect x="230" y="662" width="340" height="52" rx="10" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+            <text x="400" y="685" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">Ekstraksi Vektor &amp; Hitung Cosine Similarity</text>
+            <text x="400" y="702" text-anchor="middle" fill="#94a3b8" font-size="10">Bandingkan dengan Vektor Referensi Mahasiswa</text>
+          </g>
+
+          <line x1="400" y1="714" x2="400" y2="744" stroke="#34d399" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 9. Decision: Similarity >= 85%? -->
+          <g class="cursor-pointer group" onclick="setScript('Ambang Batas Kemiripan: Ambang batas ditetapkan minimal 85.0% sesuai diagram referensi sistem.')">
+            <polygon points="400,744 520,784 400,824 280,784" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+            <text x="400" y="780" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Similarity &gt;= 85.0%?</text>
+            <text x="400" y="796" text-anchor="middle" fill="#a7f3d0" font-size="10">(Threshold Validasi Wajah)</text>
+          </g>
+
+          <!-- Branch Sim: <85% -->
+          <line x1="280" y1="784" x2="200" y2="784" stroke="#f87171" stroke-width="2" />
+          <line x1="200" y1="784" x2="200" y2="688" stroke="#f87171" stroke-width="2" />
+          <line x1="200" y1="688" x2="230" y2="688" stroke="#f87171" stroke-width="2" marker-end="url(#arrow-red)" />
+          <text x="215" y="776" fill="#f87171" font-size="11" font-weight="bold">&lt; 85% (Ditolak)</text>
+
+          <!-- Branch Sim: >=85% -->
+          <line x1="400" y1="824" x2="400" y2="854" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+          <text x="410" y="840" fill="#4ade80" font-size="11" font-weight="bold">&gt;= 85% (Cocok)</text>
+
+          <!-- 10. Check Attendance Time Tolerance -->
+          <g class="cursor-pointer group" onclick="setScript('Validasi Waktu: Sistem mencatat status HADIR TEPAT WAKTU jika sebelum batas toleransi (20 menit), atau TERLAMBAT jika melewati batas toleransi.')">
+            <rect x="230" y="854" width="340" height="52" rx="10" fill="#1e293b" stroke="#34d399" stroke-width="2"/>
+            <text x="400" y="877" text-anchor="middle" fill="#4ade80" font-size="12" font-weight="bold">Evaluasi Waktu: Hadir / Terlambat</text>
+            <text x="400" y="894" text-anchor="middle" fill="#94a3b8" font-size="10">Simpan Log Presensi &amp; Audit Trail ke Database</text>
+          </g>
+
+          <line x1="400" y1="906" x2="400" y2="946" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+
+          <!-- 11. Finish -->
+          <g class="cursor-pointer group" onclick="setScript('Selesai: Kartu kehadiran terbit dan persentase kehadiran semester langsung diperbarui secara otomatis.')">
+            <rect x="270" y="946" width="260" height="46" rx="23" fill="#064e3b" stroke="#34d399" stroke-width="2.5"/>
+            <text x="400" y="974" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">SELESAI (Absen Tercatat)</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- TAB 3: MONITORING & EXAM ELIGIBILITY FLOWCHART -->
+    <div id="tab-monitoring" class="tab-content hidden bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden">
+      <div class="flex items-center justify-between pb-4 border-b border-slate-800 mb-6">
+        <div>
+          <span class="text-xs font-bold text-purple-400 uppercase tracking-widest">Tahap 3 dari 3</span>
+          <h2 class="text-lg font-black text-white">Flowchart Monitoring &amp; Evaluasi Syarat Ujian (Dosen / BAAK)</h2>
+          <p class="text-xs text-slate-400">Pemantauan rekap kehadiran kelas oleh Bapak ANDRIYANA S.T., M.Kom., evaluasi syarat ujian 75%, dan ekspor laporan.</p>
+        </div>
+        <span class="px-3 py-1 bg-purple-950/80 text-purple-300 border border-purple-500/30 text-xs font-mono rounded-lg">
+          Syarat Ujian &gt;= 75%
+        </span>
+      </div>
+
+      <!-- SVG Flowchart Monitoring -->
+      <div class="overflow-x-auto pb-4 flex justify-center">
+        <svg viewBox="0 0 760 760" class="w-full max-w-2xl select-none" xmlns="http://www.w3.org/2000/svg">
+          <!-- 1. Start -->
+          <g class="cursor-pointer group" onclick="setScript('Mulai: Dosen Pengampu (Bapak ANDRIYANA S.T., M.Kom.) atau Biro BAAK login ke sistem.')">
+            <rect x="250" y="20" width="260" height="46" rx="23" fill="#1e293b" stroke="#c084fc" stroke-width="2.5"/>
+            <text x="380" y="48" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">MULAI MONITORING</text>
+          </g>
+
+          <line x1="380" y1="66" x2="380" y2="96" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 2. Fetch Data -->
+          <g class="cursor-pointer group" onclick="setScript('Pengambilan Data: Sistem memuat seluruh riwayat presensi mahasiswa kelas Semester 5 secara real-time dari database.')">
+            <rect x="220" y="96" width="320" height="50" rx="8" fill="#0f172a" stroke="#a855f7" stroke-width="2"/>
+            <text x="380" y="119" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Ambil Data Presensi Mahasiswa</text>
+            <text x="380" y="135" text-anchor="middle" fill="#d8b4fe" font-size="10">Riwayat Kehadiran Semester 5 Real-Time</text>
+          </g>
+
+          <line x1="380" y1="146" x2="380" y2="176" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 3. Auto Calculate Attendance % -->
+          <g class="cursor-pointer group" onclick="setScript('Perhitungan Otomatis: Persentase kehadiran dihitung otomatis: (Total Kehadiran / Total Pertemuan) dikali 100%.')">
+            <rect x="200" y="176" width="360" height="52" rx="10" fill="#1e293b" stroke="#818cf8" stroke-width="2"/>
+            <text x="380" y="199" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Kalkulasi Otomatis Persentase Kehadiran</text>
+            <text x="380" y="215" text-anchor="middle" fill="#a5b4fc" font-size="10">Rumus: (Total Hadir / Total Pertemuan) x 100%</text>
+          </g>
+
+          <line x1="380" y1="228" x2="380" y2="258" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 4. Decision: Kehadiran >= 75%? -->
+          <g class="cursor-pointer group" onclick="setScript('Evaluasi Syarat Ujian: Mahasiswa dengan kehadiran minimal 75% otomatis dinyatakan berhak mengikuti Ujian Tengah/Akhir Semester.')">
+            <polygon points="380,258 500,298 380,338 260,298" fill="#1e1b4b" stroke="#c084fc" stroke-width="2"/>
+            <text x="380" y="294" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Kehadiran &gt;= 75.0%?</text>
+            <text x="380" y="310" text-anchor="middle" fill="#e9d5ff" font-size="10">(Syarat Mengikuti Ujian)</text>
+          </g>
+
+          <!-- Branch >= 75% (Eligible) -->
+          <line x1="500" y1="298" x2="590" y2="298" stroke="#4ade80" stroke-width="2" />
+          <line x1="590" y1="298" x2="590" y2="380" stroke="#4ade80" stroke-width="2" marker-end="url(#arrow-green)" />
+          <text x="515" y="290" fill="#4ade80" font-size="11" font-weight="bold">Ya (&gt;= 75%)</text>
+
+          <g class="cursor-pointer group" onclick="setScript('Lolos Ujian: Mahasiswa mendapatkan label hijau Memenuhi Syarat Mengikuti Ujian.')">
+            <rect x="490" y="380" width="200" height="46" rx="8" fill="#064e3b" stroke="#34d399" stroke-width="2"/>
+            <text x="590" y="403" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Label Hijau: LOLOS UJIAN</text>
+            <text x="590" y="417" text-anchor="middle" fill="#a7f3d0" font-size="9">Memenuhi Syarat Mengikuti Ujian</text>
+          </g>
+
+          <!-- Branch < 75% (Warning) -->
+          <line x1="260" y1="298" x2="170" y2="298" stroke="#f87171" stroke-width="2" />
+          <line x1="170" y1="298" x2="170" y2="380" stroke="#f87171" stroke-width="2" marker-end="url(#arrow-red)" />
+          <text x="180" y="290" fill="#f87171" font-size="11" font-weight="bold">Tidak (&lt; 75%)</text>
+
+          <g class="cursor-pointer group" onclick="setScript('Peringatan: Mahasiswa mendapatkan label merah Peringatan Tidak Lolos Ujian karena kehadiran di bawah 75%.')">
+            <rect x="70" y="380" width="200" height="46" rx="8" fill="#450a0a" stroke="#f87171" stroke-width="2"/>
+            <text x="170" y="403" text-anchor="middle" fill="#ffffff" font-size="11" font-weight="bold">Label Merah: PERINGATAN</text>
+            <text x="170" y="417" text-anchor="middle" fill="#fca5a5" font-size="9">Tidak Memenuhi Syarat Ujian</text>
+          </g>
+
+          <!-- Rejoin to Actions -->
+          <line x1="590" y1="426" x2="590" y2="470" stroke="#c084fc" stroke-width="2" />
+          <line x1="170" y1="426" x2="170" y2="470" stroke="#c084fc" stroke-width="2" />
+          <line x1="170" y1="470" x2="590" y2="470" stroke="#c084fc" stroke-width="2" />
+          <line x1="380" y1="470" x2="380" y2="500" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 5. Lecturer Action Hub -->
+          <g class="cursor-pointer group" onclick="setScript('Fitur Dosen: Dosen dapat membuka/menutup sesi perkuliahan, menghapus presensi yang keliru, me-reset pendaftaran wajah, atau mengunduh laporan.')">
+            <polygon points="210,550 240,500 550,500 520,550" fill="#1e293b" stroke="#e879f9" stroke-width="2"/>
+            <text x="380" y="522" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Panel Kendali &amp; Tindakan Dosen</text>
+            <text x="380" y="538" text-anchor="middle" fill="#f0abfc" font-size="10">Buka Sesi • Koreksi Presensi • Reset Wajah</text>
+          </g>
+
+          <line x1="380" y1="550" x2="380" y2="580" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 6. Export Report -->
+          <g class="cursor-pointer group" onclick="setScript('Ekspor Laporan: Sistem mampu mencetak laporan resmi berformat PDF siap cetak berkop USINDO dan berkas spreadsheet Excel XLSX.')">
+            <rect x="210" y="580" width="340" height="52" rx="10" fill="#0f172a" stroke="#38bdf8" stroke-width="2"/>
+            <text x="380" y="603" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold">📄 Ekspor Laporan Rekap Resmi</text>
+            <text x="380" y="620" text-anchor="middle" fill="#bae6fd" font-size="10">Dokumen PDF Berkop USINDO &amp; Berkas Excel XLSX</text>
+          </g>
+
+          <line x1="380" y1="632" x2="380" y2="662" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
+
+          <!-- 7. Finish -->
+          <g class="cursor-pointer group" onclick="setScript('Selesai: Monitoring selesai dan laporan rekap presensi resmi siap dilaporkan ke BAAK USINDO.')">
+            <rect x="250" y="662" width="260" height="46" rx="23" fill="#1e293b" stroke="#c084fc" stroke-width="2.5"/>
+            <text x="380" y="690" text-anchor="middle" fill="#ffffff" font-size="13" font-weight="bold">SELESAI (Monitoring)</text>
+          </g>
+        </svg>
+      </div>
+    </div>
+
+    <!-- TAB 4: LEGEND & SYMBOLS -->
+    <div id="tab-legend" class="tab-content hidden bg-slate-900/90 border border-slate-800 rounded-2xl p-6 shadow-xl">
+      <h2 class="text-lg font-black text-white mb-2">Panduan Simbol Flowchart Standar ISO 5807</h2>
+      <p class="text-xs text-slate-400 mb-6">Penjelasan arti setiap bentuk geometri yang digunakan pada flowchart ini untuk menjawab pertanyaan dosen penguji:</p>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start space-x-3.5">
+          <div class="w-12 h-8 rounded-full border-2 border-cyan-400 flex items-center justify-center font-bold text-[10px] text-cyan-300 shrink-0">
+            Kapsul
+          </div>
+          <div>
+            <div class="font-bold text-white text-sm">Terminator (Mulai / Selesai)</div>
+            <p class="text-slate-300 mt-0.5">Menyatakan awal atau akhir dari suatu program/sistem. Digunakan pada titik <em>Mulai</em> dan <em>Selesai</em>.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start space-x-3.5">
+          <div class="w-12 h-8 border-2 border-blue-400 -skew-x-12 flex items-center justify-center font-bold text-[10px] text-blue-300 shrink-0">
+            Jajar Genjang
+          </div>
+          <div>
+            <div class="font-bold text-white text-sm">Input / Output</div>
+            <p class="text-slate-300 mt-0.5">Operasi penerimaan data dari luar (input NIM, frame kamera, GPS) atau penayangan hasil ke layar pengguna.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start space-x-3.5">
+          <div class="w-12 h-8 border-2 border-indigo-400 flex items-center justify-center font-bold text-[10px] text-indigo-300 shrink-0">
+            Persegi
+          </div>
+          <div>
+            <div class="font-bold text-white text-sm">Process (Proses Komputasi)</div>
+            <p class="text-slate-300 mt-0.5">Pengolahan logika internal, ekstraksi feature embedding 128-d, kalkulasi Cosine Similarity, dan penyimpanan database.</p>
+          </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-slate-800/60 border border-slate-700/60 flex items-start space-x-3.5">
+          <div class="w-10 h-10 border-2 border-amber-400 rotate-45 flex items-center justify-center font-bold text-[10px] text-amber-300 shrink-0 mt-1">
+            <span class="-rotate-45">Belah Ketupat</span>
+          </div>
+          <div>
+            <div class="font-bold text-white text-sm">Decision (Keputusan Kondisional)</div>
+            <p class="text-slate-300 mt-0.5">Percabangan kondisi logika dengan keluaran Ya atau Tidak (apakah similarity &gt; 85%?, apakah radius GPS &le; 250m?).</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.classList.remove('bg-blue-600', 'text-white', 'shadow-md');
+        btn.classList.add('text-slate-400');
+      });
+
+      const activeContent = document.getElementById(tabId);
+      if (activeContent) activeContent.classList.remove('hidden');
+
+      const btnId = tabId.replace('tab-', 'btn-');
+      const activeBtn = document.getElementById(btnId);
+      if (activeBtn) {
+        activeBtn.classList.remove('text-slate-400');
+        activeBtn.classList.add('bg-blue-600', 'text-white', 'shadow-md');
+      }
+
+      // Default script text for each tab
+      if (tabId === 'tab-enrollment') {
+        setScript('Tahap 1: Pendaftaran Wajah. Mahasiswa login dengan NIM, mengambil 3 sudut pose wajah (Depan, Kiri, Kanan), lalu diekstraksi menjadi vektor 128-dimensi. Foto mentah dihapus untuk menjaga privasi.');
+      } else if (tabId === 'tab-recognition') {
+        setScript('Tahap 2: Absensi Harian. Memvalidasi geofencing GPS kampus (<250m), menjalankan Liveness Detection anti-spoofing, lalu mencocokkan kemiripan wajah (>85% Cosine Similarity).');
+      } else if (tabId === 'tab-monitoring') {
+        setScript('Tahap 3: Monitoring Dosen. Dosen melihat rekap absensi real-time, evaluasi otomatis syarat ujian minimal 75%, serta dapat mengekspor laporan resmi ke format PDF dan Excel.');
+      } else {
+        setScript('Standar ISO 5807 memastikan simbol-simbol flowchart memenuhi kaidah ilmiah rekayasa perangkat lunak.');
+      }
+    }
+
+    function setScript(text) {
+      const el = document.getElementById('spoken-text');
+      if (el) {
+        el.innerText = `"${text}"`;
+      }
+    }
+  </script>
+</body>
+</html>
