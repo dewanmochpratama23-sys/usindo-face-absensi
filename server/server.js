@@ -907,7 +907,7 @@ app.get('/api/students', authenticateToken, (req, res) => {
 });
 
 // Tambah Mahasiswa Baru oleh BAAK / Dosen
-app.post('/api/students', authenticateToken, authorizeRole('admin', 'dosen'), (req, res) => {
+app.post('/api/students', authenticateToken, requireRole('admin', 'dosen'), (req, res) => {
   const { name, identifier, email, prodi, kelas, semester, password } = req.body;
   const ip = getClientIp(req);
   const userAgent = req.headers['user-agent'] || 'Browser';
@@ -979,7 +979,7 @@ app.post('/api/students', authenticateToken, authorizeRole('admin', 'dosen'), (r
 });
 
 // Hapus Mahasiswa oleh BAAK / Dosen
-app.delete('/api/students/:identifier', authenticateToken, authorizeRole('admin', 'dosen'), (req, res) => {
+app.delete('/api/students/:identifier', authenticateToken, requireRole('admin', 'dosen'), (req, res) => {
   const { identifier } = req.params;
   const user = db.find('users', u => u.identifier === identifier && u.role === 'mahasiswa');
   if (!user) {

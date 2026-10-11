@@ -112,6 +112,14 @@
 
           <line x1="380" y1="66" x2="380" y2="94" stroke="#38bdf8" stroke-width="2" marker-end="url(#arrow)" />
 
+          <!-- Pre-step: Penerbitan Akun Mahasiswa Baru -->
+          <g class="cursor-pointer group" onclick="setScript('Penerbitan Akun Baru: Mahasiswa baru yang belum terdaftar di sistem dapat didaftarkan langsung oleh Biro BAAK atau melalui tombol Registrasi Mandiri di halaman depan login. Status awal mahasiswa adalah Menunggu Scan Wajah.')">
+            <rect x="30" y="95" width="180" height="45" rx="8" fill="#1e1b4b" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="4,2"/>
+            <text x="120" y="114" text-anchor="middle" fill="#c7d2fe" font-size="10" font-weight="bold">+ Akun Mahasiswa Baru</text>
+            <text x="120" y="128" text-anchor="middle" fill="#a5b4fc" font-size="9">(Input BAAK / Registrasi)</text>
+          </g>
+          <line x1="210" y1="117" x2="250" y2="117" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="3,2" marker-end="url(#arrow)" />
+
           <!-- 2. Input NIM & Password (Parallelogram) -->
           <g class="cursor-pointer group" onclick="setScript('Input Kredensial: Mahasiswa memasukkan NIM dan kata sandi akun untuk memverifikasi identitas resmi.')">
             <polygon points="230,140 260,95 530,95 500,140" fill="#0f172a" stroke="#60a5fa" stroke-width="2"/>
@@ -434,10 +442,10 @@
           <line x1="380" y1="470" x2="380" y2="500" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
 
           <!-- 5. Lecturer Action Hub -->
-          <g class="cursor-pointer group" onclick="setScript('Fitur Dosen: Dosen dapat membuka/menutup sesi perkuliahan, menghapus presensi yang keliru, me-reset pendaftaran wajah, atau mengunduh laporan.')">
+          <g class="cursor-pointer group" onclick="setScript('Fitur Dosen & BAAK: Mengelola data mahasiswa kelas, mendaftarkan mahasiswa baru (+ Tambah Mahasiswa BAAK), membuka/menutup sesi perkuliahan, dan mengunduh laporan rekap resmi.')">
             <polygon points="210,550 240,500 550,500 520,550" fill="#1e293b" stroke="#e879f9" stroke-width="2"/>
-            <text x="380" y="522" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Panel Kendali &amp; Tindakan Dosen</text>
-            <text x="380" y="538" text-anchor="middle" fill="#f0abfc" font-size="10">Buka Sesi • Koreksi Presensi • Reset Wajah</text>
+            <text x="380" y="522" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">Panel Kendali Dosen &amp; BAAK</text>
+            <text x="380" y="538" text-anchor="middle" fill="#f0abfc" font-size="10">Master Mahasiswa • Buka Sesi • Ekspor Rekap</text>
           </g>
 
           <line x1="380" y1="550" x2="380" y2="580" stroke="#c084fc" stroke-width="2" marker-end="url(#arrow)" />
@@ -530,11 +538,11 @@
 
       // Default script text for each tab
       if (tabId === 'tab-enrollment') {
-        setScript('Tahap 1: Pendaftaran Wajah. Mahasiswa login dengan NIM, mengambil 3 sudut pose wajah (Depan, Kiri, Kanan), lalu diekstraksi menjadi vektor 128-dimensi. Foto mentah dihapus untuk menjaga privasi.');
+        setScript('Tahap 1: Pendaftaran Wajah. Akun mahasiswa baru diterbitkan resmi oleh BAAK atau melalui registrasi mandiri. Mahasiswa login dengan NIM, mengambil 3 sudut pose wajah (Depan, Kiri, Kanan), lalu diekstraksi menjadi vektor 128-dimensi. Foto mentah dihapus untuk menjaga privasi.');
       } else if (tabId === 'tab-recognition') {
         setScript('Tahap 2: Absensi Harian. Memvalidasi geofencing GPS kampus (<250m), menjalankan Liveness Detection anti-spoofing, lalu mencocokkan kemiripan wajah (>85% Cosine Similarity).');
       } else if (tabId === 'tab-monitoring') {
-        setScript('Tahap 3: Monitoring Dosen. Dosen melihat rekap absensi real-time, evaluasi otomatis syarat ujian minimal 75%, serta dapat mengekspor laporan resmi ke format PDF dan Excel.');
+        setScript('Tahap 3: Monitoring & Master Mahasiswa BAAK. BAAK dan Dosen dapat mengelola data mahasiswa, mendaftarkan NIM baru, memantau status wajah, serta evaluasi otomatis syarat ujian minimal 75% dan ekspor laporan resmi PDF/Excel.');
       } else {
         setScript('Standar ISO 5807 memastikan simbol-simbol flowchart memenuhi kaidah ilmiah rekayasa perangkat lunak.');
       }

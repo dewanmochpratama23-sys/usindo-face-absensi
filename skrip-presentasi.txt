@@ -34,11 +34,12 @@ BABAK 2: PENJELASAN FLOWCHART 3 TAHAPAN (~3 Menit)
 "Bapak dan rekan-rekan sekalian, sistem ini bekerja melalui tiga pilar tahapan utama:
 
 1. TAHAP PERTAMA: PENDAFTARAN WAJAH (BIOMETRIC ENROLLMENT)
-   - Mahasiswa melakukan login terlebih dahulu dengan NIM dan kata sandi akun USINDO.
+   - Penerbitan Akun Mahasiswa Baru: Jika ada mahasiswa baru yang belum terdaftar di sistem, akun NIM resminya dapat didaftarkan langsung oleh Biro BAAK pada panel Master Mahasiswa, atau melalui tombol Registrasi Mandiri di halaman depan login. Status awal mahasiswa adalah 'Menunggu Scan Wajah'.
+   - Mahasiswa melakukan login terlebih dahulu dengan NIM dan kata sandi akun USINDO (default: usindomaju01).
    - Sistem meminta izin akses kamera dan mengaktifkan panduan Head-Up Display (HUD) bingkai oval.
    - Mahasiswa dipandu mengambil 3 sudut pose wajah: Pose Depan, Tengok Kiri 25-30 derajat, dan Tengok Kanan 25-30 derajat agar sistem memiliki toleransi sudut pandang yang tinggi saat absensi harian.
    - Model AI kemudian mengekstraksi wajah menjadi 128-dimensional biometric embedding vector yang dinormalisasi menjadi unit vector.
-   - Poin paling penting terkait keamanan dan privasi: FOTO MENTAH (RAW PHOTO) MAHASISWA SAMA SEKALI TIDAK DISIMPAN KE SERVER. Frame foto langsung dihapus dari memori RAM begitu vektor berhasil diekstraksi. Yang tersimpan di database hanyalah representasi numerik 128-dimensi. Ini menjamin privasi biometrik mahasiswa aman dari potensi kebocoran data."
+   - Poin paling penting terkait keamanan dan privasi: FOTO MENTAH (RAW PHOTO) MAHASISWA SAMA SEKALI TIDAK DISIMPAN KE SERVER. Frame foto langsung dihapus dari memori RAM begitu vektor berhasil diekstraksi. Yang tersimpan di database hanyalah representasi numerik 128-dimensi. Ini menjamin privasi biometrik mahasiswa aman dari potensi kebocoran data. Status mahasiswa kini otomatis berubah menjadi 'Enrolled / Terdaftar'."
 
 [AKSI: Tunjuk Tab 2 Absensi Harian di flowchart]
 
@@ -53,10 +54,10 @@ BABAK 2: PENJELASAN FLOWCHART 3 TAHAPAN (~3 Menit)
 [AKSI: Tunjuk Tab 3 Monitoring Dosen di flowchart]
 
 "3. TAHAP KETIGA: MONITORING & EVALUASI SYARAT UJIAN (DOSEN & BAAK)
-   - Dosen Pengampu, Bapak Andriyana, dapat memantau kehadiran kelas secara real-time.
-   - Sistem secara otomatis menghitung persentase kehadiran setiap mahasiswa sepanjang Semester 5.
-   - Mahasiswa dengan kehadiran 75% ke atas otomatis mendapat label hijau 'MEMENUHI SYARAT UJIAN', sedangkan di bawah 75% mendapat peringatan merah 'TIDAK MEMENUHI SYARAT'.
-   - Dosen juga memiliki kontrol untuk membuka/menutup sesi, mengoreksi data presensi, serta mencetak laporan resmi dalam format PDF berkop surat USINDO maupun file Excel XLSX."
+   - Manajemen Master Mahasiswa BAAK: BAAK dan Dosen dapat mengelola data mahasiswa kelas Semester 5, memantau status pendaftaran biometrik (apakah sudah scan wajah atau belum), serta mendaftarkan mahasiswa baru secara langsung.
+   - Rekap Real-Time: Dosen Pengampu, Bapak Andriyana, dapat memantau kehadiran kelas secara real-time.
+   - Evaluasi Syarat Ujian Otomatis: Sistem secara otomatis menghitung persentase kehadiran setiap mahasiswa sepanjang Semester 5. Mahasiswa dengan kehadiran 75% ke atas otomatis mendapat label hijau 'MEMENUHI SYARAT UJIAN', sedangkan di bawah 75% mendapat peringatan merah 'TIDAK MEMENUHI SYARAT'.
+   - Kontrol Sesi & Ekspor: Dosen juga memiliki kontrol untuk membuka/menutup sesi perkuliahan, mengoreksi data presensi, serta mencetak laporan resmi dalam format PDF berkop surat USINDO maupun file Excel XLSX."
 
 
 --------------------------------------------------------------------------------
